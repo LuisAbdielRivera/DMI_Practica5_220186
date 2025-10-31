@@ -30,6 +30,11 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
 
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(upComingMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
+    ref.read(mexicanMoviesProvider.notifier).loadNextPage();
+
   }
 
   @override
@@ -37,49 +42,68 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
     final nowPlaying=ref.watch(nowPlayingMoviesProvider);
     final slideShowMovies =ref.watch(movieSlideShowProvider);
+    final popular= ref.watch(popularMoviesProvider);
+    final upComing= ref.watch(upComingMoviesProvider);
+    final topRated= ref.watch(topRatedMoviesProvider);
+    final mexican= ref.watch(mexicanMoviesProvider);
 
     return SingleChildScrollView(
       child: Column(
         children: [
-
-          const CustomAppbar(),
-
+          CustomAppbar(),
           MovieSlideshow(movies: slideShowMovies),
+      
+      
           MovieHorizontalListview(
-            movies: nowPlaying,
-            title: 'En cines',
-            subtitle: 'Miercoles 22 de octubre',
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+          movies: nowPlaying,
+          title: 'En cines',
+          subtitle: 'Miercoles 22 de octubre',
+          loadNextPage: (){
+            //print('Evebto lananzod por listern horizomtal');
+            ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+          },
+          ),
+      
+           MovieHorizontalListview(
+          movies: upComing,
+          title: 'Proximamete',
+          subtitle: 'Este Mes',
+          loadNextPage: (){
+            //print('Evebto lananzod por listern horizomtal');
+            ref.read(upComingMoviesProvider.notifier).loadNextPage();
+          },
           ),
 
-          MovieHorizontalListview(
-            movies: nowPlaying,
-            title: 'Proximamente',
-            subtitle: 'En este mes',
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+            MovieHorizontalListview(
+          movies: popular,
+          title: 'Populares',
+          subtitle: 'La Proxima Semana',
+          loadNextPage: (){
+            //print('Evebto lananzod por listern horizomtal');
+            ref.read(popularMoviesProvider.notifier).loadNextPage();
+          },
           ),
-
-          MovieHorizontalListview(
-            movies: nowPlaying,
-            title: 'Populares',
-            subtitle: 'Miercoles 22 de octubre',
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+      
+            MovieHorizontalListview(
+          movies: topRated,
+          title: 'Mejor Calificadas',
+          subtitle: 'La Proxima Semana',
+          loadNextPage: (){
+            //print('Evebto lananzod por listern horizomtal');
+            ref.read(topRatedMoviesProvider.notifier).loadNextPage();
+          },
           ),
-
-          MovieHorizontalListview(
-            movies: nowPlaying,
-            title: 'Mexicanas',
-            subtitle: 'Miercoles 22 de octubre',
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+      
+            MovieHorizontalListview(
+          movies: mexican,
+          title: 'Mexicanas',
+          subtitle: 'La Proxima Semana',
+          loadNextPage: (){
+            //print('Evebto lananzod por listern horizomtal');
+            ref.read(mexicanMoviesProvider.notifier).loadNextPage();
+          },
           ),
-
-          MovieHorizontalListview(
-            movies: nowPlaying,
-            title: 'Mejor Calificadas',
-            subtitle: 'Miercoles 22 de octubre',
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
-          ),
-        ],
+        ]
       ),
     );
   }
