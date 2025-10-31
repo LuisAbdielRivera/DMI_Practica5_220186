@@ -2,6 +2,7 @@ import 'package:cinemapedia_220186/presentation/providers/movies/movie_slideshow
 import 'package:cinemapedia_220186/presentation/providers/movies/movies_providers.dart';
 import 'package:cinemapedia_220186/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -34,7 +35,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     ref.read(upComingMoviesProvider.notifier).loadNextPage();
     ref.read(topRatedMoviesProvider.notifier).loadNextPage();
     ref.read(mexicanMoviesProvider.notifier).loadNextPage();
-
   }
 
   @override
@@ -47,19 +47,20 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final topRated= ref.watch(topRatedMoviesProvider);
     final mexican= ref.watch(mexicanMoviesProvider);
 
+    final today = DateTime.now();
+    final formattedDate = DateFormat("EEEE d 'de' MMMM", 'es_MX').format(today);
+
     return SingleChildScrollView(
       child: Column(
         children: [
           CustomAppbar(),
           MovieSlideshow(movies: slideShowMovies),
       
-      
           MovieHorizontalListview(
           movies: nowPlaying,
           title: 'En cines',
-          subtitle: 'Miercoles 22 de octubre',
+          subtitle: formattedDate,
           loadNextPage: (){
-            //print('Evebto lananzod por listern horizomtal');
             ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
           },
           ),
@@ -69,7 +70,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
           title: 'Proximamete',
           subtitle: 'Este Mes',
           loadNextPage: (){
-            //print('Evebto lananzod por listern horizomtal');
             ref.read(upComingMoviesProvider.notifier).loadNextPage();
           },
           ),
@@ -99,7 +99,6 @@ class _HomeViewState extends ConsumerState<_HomeView> {
           title: 'Mexicanas',
           subtitle: 'La Proxima Semana',
           loadNextPage: (){
-            //print('Evebto lananzod por listern horizomtal');
             ref.read(mexicanMoviesProvider.notifier).loadNextPage();
           },
           ),

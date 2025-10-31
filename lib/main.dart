@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:cinemapedia_220186/config/router/app_router.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cinemapedia_220186/config/theme/app_theme.dart';
@@ -28,6 +29,15 @@ class MainApp extends StatelessWidget {
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       theme: AppTheme().getTheme(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es', 'MX'),
+      ],
+      locale: const Locale('es', 'MX'),
     );
   }
 }
