@@ -49,7 +49,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 360,
+      height: 380,
       child: Column(
         children: [
           if (widget.title != null || widget.subtitle != null)
@@ -86,12 +86,14 @@ class _Slide extends StatelessWidget {
         children: [
           SizedBox(
             width: 150,
+            height: 225, // Añadimos altura fija (relación de aspecto 2:3 común en pósters de películas)
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 movie.posterPath,
                 fit: BoxFit.cover,
                 width: 150,
+                height: 225,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) {
                     return const Padding(

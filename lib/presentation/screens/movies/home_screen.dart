@@ -1,5 +1,4 @@
-import 'package:cinemapedia_220186/presentation/providers/movies/movie_slideshow_provider.dart';
-import 'package:cinemapedia_220186/presentation/providers/movies/movies_providers.dart';
+import 'package:cinemapedia_220186/presentation/providers/providers.dart';
 import 'package:cinemapedia_220186/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,8 +11,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: _HomeView(),
-    bottomNavigationBar: CustomBottomNavigationbar(),
+    return const Scaffold(
+      body: _HomeView(),
+      bottomNavigationBar: CustomBottomNavigationbar(),
     );
   }
 }
@@ -39,71 +39,86 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final initialLoading = ref.watch(initialLoadingProvider);
+    if (initialLoading) return const FullscreenLoader();
 
-    final nowPlaying=ref.watch(nowPlayingMoviesProvider);
-    final slideShowMovies =ref.watch(movieSlideShowProvider);
-    final popular= ref.watch(popularMoviesProvider);
-    final upComing= ref.watch(upComingMoviesProvider);
-    final topRated= ref.watch(topRatedMoviesProvider);
-    final mexican= ref.watch(mexicanMoviesProvider);
+    final nowPlaying = ref.watch(nowPlayingMoviesProvider);
+    final slideShowMovies = ref.watch(movieSlideShowProvider);
+    final popular = ref.watch(popularMoviesProvider);
+    final upComing = ref.watch(upComingMoviesProvider);
+    final topRated = ref.watch(topRatedMoviesProvider);
+    final mexican = ref.watch(mexicanMoviesProvider);
 
     final today = DateTime.now();
     final formattedDate = DateFormat("EEEE d 'de' MMMM", 'es_MX').format(today);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomAppbar(),
-          MovieSlideshow(movies: slideShowMovies),
-      
-          MovieHorizontalListview(
-          movies: nowPlaying,
-          title: 'En cines',
-          subtitle: formattedDate,
-          loadNextPage: (){
-            ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-          },
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: CustomAppbar(),
           ),
-      
-           MovieHorizontalListview(
-          movies: upComing,
-          title: 'Proximamete',
-          subtitle: 'Este Mes',
-          loadNextPage: (){
-            ref.read(upComingMoviesProvider.notifier).loadNextPage();
-          },
-          ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return Column(
+                children: [
+                  MovieSlideshow(movies: slideShowMovies),
+                  
+                  MovieHorizontalListview(
+                    movies: nowPlaying,
+                    title: 'En cines',
+                    subtitle: formattedDate,
+                    loadNextPage: () {
+                      ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  
+                  MovieHorizontalListview(
+                    movies: upComing,
+                    title: 'Próximamente',
+                    subtitle: 'Este Mes',
+                    loadNextPage: () {
+                      ref.read(upComingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
 
-            MovieHorizontalListview(
-          movies: popular,
-          title: 'Populares',
-          subtitle: 'La Proxima Semana',
-          loadNextPage: (){
-            //print('Evebto lananzod por listern horizomtal');
-            ref.read(popularMoviesProvider.notifier).loadNextPage();
-          },
+                  MovieHorizontalListview(
+                    movies: popular,
+                    title: 'Populares',
+                    subtitle: 'La Próxima Semana',
+                    loadNextPage: () {
+                      ref.read(popularMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  
+                  MovieHorizontalListview(
+                    movies: topRated,
+                    title: 'Mejor Calificadas',
+                    subtitle: 'La Próxima Semana',
+                    loadNextPage: () {
+                      ref.read(topRatedMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  
+                  MovieHorizontalListview(
+                    movies: mexican,
+                    title: 'Mexicanas',
+                    subtitle: 'La Próxima Semana',
+                    loadNextPage: () {
+                      ref.read(mexicanMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                  const SizedBox(height: 10)
+                ],
+              );
+            },
+            childCount: 1,
           ),
-      
-            MovieHorizontalListview(
-          movies: topRated,
-          title: 'Mejor Calificadas',
-          subtitle: 'La Proxima Semana',
-          loadNextPage: (){
-            //print('Evebto lananzod por listern horizomtal');
-            ref.read(topRatedMoviesProvider.notifier).loadNextPage();
-          },
-          ),
-      
-            MovieHorizontalListview(
-          movies: mexican,
-          title: 'Mexicanas',
-          subtitle: 'La Proxima Semana',
-          loadNextPage: (){
-            ref.read(mexicanMoviesProvider.notifier).loadNextPage();
-          },
-          ),
-        ]
-      ),
+        ),
+      ],
     );
   }
 }

@@ -97,8 +97,11 @@ class MoviedbDatasource extends MoviesDatasource {
   Future<List<Movie>> getMexicanMovies({int page = 1}) async {
     final response = await dio.get('/discover/movie', queryParameters: {
       'page': page,
+      'with_original_language': 'es',
+      'region': 'MX',
       'with_origin_country': 'MX',
-      'sort_by': 'popularity.desc', // ordena por popularidad
+      'sort_by': 'vote_average.desc',
+      'vote_count.gte': 10 // ordena por popularidad
     });
 
     final movieDBResponse = MovieDbResponse.fromJson(response.data);
